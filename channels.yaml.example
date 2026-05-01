@@ -1,0 +1,64 @@
+# ============================================================
+# AI Gateway 通道配置文件
+# ============================================================
+#
+# 使用方式：
+#   1. 复制本文件为 channels.yaml:  cp channels.yaml.example channels.yaml
+#   2. 填入实际的 refresh_token 等敏感信息
+#   3. channels.yaml 已被 .gitignore 忽略，不会提交到仓库
+#
+# 结构说明：
+#   channel_groups:          # 通道组列表，每个通道组管理同一渠道类型下的多个账号
+#     - name:                # 通道组名称（标识用，日志中会显示）
+#       type:                # 通道类型，对应元类注册的 key（如 kiro、codex）
+#                            # registry 根据此字段查找对应的 Channel 和 ChannelGroup 类
+#       priority:            # 通道组优先级，数值越小越优先
+#                            # 路由层按优先级依次尝试通道组
+#       strategy:            # 组内通道选择策略：
+#                            #   ordered    — 按通道优先级从高到低选（默认）
+#                            #   random     — 随机选一个可用通道
+#                            #   round_robin — 轮询，均匀分配请求
+#       channels:            # 组内通道列表，每个通道对应一个账号
+#         - name:            # 通道名称（标识用，日志和统计中会显示）
+#           priority:        # 通道优先级，数值越小越优先（strategy=ordered 时生效）
+#           refresh_token:   # 账号的 refresh_token（敏感信息，不要提交到 git）
+#           region:          # AWS 区域（Kiro 通道专用，默认 us-east-1）
+#           max_concurrency: # 单通道最大并发数，超过则标记为 throttled
+#                            # Kiro 免费账号建议设为 1
+#           models:          # 可选，限制该通道只使用指定模型
+#                            # 不填则启动时自动从 API 拉取该账号支持的所有模型
+#                            # 填了则取配置列表与 API 返回的交集
+# ============================================================
+
+channel_groups:
+  - name: kiro
+    type: kiro
+    priority: 1
+    strategy: ordered
+    channels:
+      - name: kiro-account-1
+        priority: 1
+        refresh_token: "your-refresh-token-here"
+        region: us-east-1
+        max_concurrency: 1
+        models:
+          - claude-sonnet-4-20250514
+          - claude-haiku-4-20250514
+
+      # 多账号示例：取消注释并填入第二个账号的 token
+      # - name: kiro-account-2
+      #   priority: 2
+      #   refresh_token: "another-token"
+      #   region: us-east-1
+      #   max_concurrency: 1
+
+  # 其他渠道示例（如 Codex，待实现）：
+  # - name: codex
+  #   type: codex
+  #   priority: 2
+  #   strategy: round_robin
+  #   channels:
+  #     - name: codex-account-1
+  #       priority: 1
+  #       api_key: "your-openai-api-key"
+  #       max_concurrency: 3

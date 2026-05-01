@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Channel config (contains tokens)
+channels.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Kiro workspace
+.kiro/
+
+# pytest
+.pytest_cache/
+
+# SQLite / 数据目录
+*.db
+*.sqlite3
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# 推送脚本
+push-private.sh
+
+# 内部设计文档
+架构方案.md
+项目背景.md
+协议格式说明.md
+
+# Reference projects
+reference/
